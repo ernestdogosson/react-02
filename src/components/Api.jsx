@@ -3,6 +3,7 @@ import FlagDisplay from "./FlagDisplay";
 import ResultMessage from "./ResultMessage";
 import AnswerButtons from "./AnswerButtons";
 import NextButton from "./NextButton";
+import ScoreBoard from "./ScoreBoard";
 
 function Api() {
   const [countries, setCountries] = useState([]);
@@ -10,6 +11,8 @@ function Api() {
   const [options, setOptions] = useState([]);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [showResult, setShowResult] = useState(false);
+  const [correctAnswers, setCorrectAnswers] = useState(0);
+  const [currentStreak, setCurrentStreak] = useState(0);
 
   const shuffleArray = (array) => {
     return [...array].sort(() => 0.5 - Math.random());
@@ -20,8 +23,7 @@ function Api() {
       const randomCountry = Math.floor(Math.random() * countryList.length);
       const selected = countryList[randomCountry];
       setCurrentCountry(selected);
-      
-      // Generate options directly here
+
       const sameRegion = countryList.filter(
         (c) =>
           c.region === selected.region &&
@@ -58,6 +60,14 @@ function Api() {
   const handleAnswerSelect = (country) => {
     setSelectedAnswer(country);
     setShowResult(true);
+
+    // Update score
+    if (country.name.common === currentCountry.name.common) {
+      setCorrectAnswers((prev) => prev + 1);
+      setCurrentStreak((prev) => prev + 1);
+    } else {
+      setCurrentStreak(0);
+    }
   };
 
   const nextCountry = () => {
@@ -93,6 +103,8 @@ function Api() {
 
         <NextButton onClick={nextCountry} />
       </div>
+
+      <ScoreBoard correct={correctAnswers} streak={currentStreak} />
     </div>
   );
 }
