@@ -1,3 +1,5 @@
+import Api from "./components/Api";
+
 function App() {
   return (
     <div className="min-h-screen bg-gray-100">
@@ -7,6 +9,7 @@ function App() {
         </h1>
         <span className="text-blue-500 ">Test your knowledge</span>
       </div>
+      <Api />
     </div>
   );
 }
