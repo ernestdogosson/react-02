@@ -1,4 +1,5 @@
 import Api from "./components/Api";
+import Login from "./components/Login";
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
         <span className="text-blue-500 ">Test your knowledge</span>
       </div>
       <Api />
+      <Login />
     </div>
   );
 }

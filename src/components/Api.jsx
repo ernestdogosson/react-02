@@ -48,7 +48,6 @@ function Api() {
         const data = await response.json();
         if (Array.isArray(data)) {
           setCountries(data);
-          selectRandomCountry(data);
         }
       } catch (error) {
         console.log("error fetching data:", error);
@@ -57,11 +56,33 @@ function Api() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (countries.length > 0) {
+      setTimeout(() => {
+        const randomCountry = Math.floor(Math.random() * countries.length);
+        const selected = countries[randomCountry];
+
+        const sameRegion = countries.filter(
+          (c) =>
+            c.region === selected.region &&
+            c.name.common !== selected.name.common,
+        );
+
+        const wrongCountries = shuffleArray(sameRegion).slice(0, 3);
+        const allOptions = shuffleArray([selected, ...wrongCountries]);
+
+        setCurrentCountry(selected);
+        setOptions(allOptions);
+        setSelectedAnswer(null);
+        setShowResult(false);
+      }, 0);
+    }
+  }, [countries]);
+
   const handleAnswerSelect = (country) => {
     setSelectedAnswer(country);
     setShowResult(true);
 
-    // Update score
     if (country.name.common === currentCountry.name.common) {
       setCorrectAnswers((prev) => prev + 1);
       setCurrentStreak((prev) => prev + 1);
