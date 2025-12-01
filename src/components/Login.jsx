@@ -1,7 +1,8 @@
 import { useState } from "react";
 import SignUp from "./SignUp";
+import SignIn from "./SignIn";
 
-function Login() {
+function Login({ onLoginSuccess }) {
   const [signUp, setSignUp] = useState(false);
 
   return (
@@ -13,7 +14,7 @@ function Login() {
               <h2 className="text-xl font-semibold mb-4 text-center">
                 Sign Up
               </h2>
-              <SignUp />
+              <SignUp onSignUpSuccess={() => setSignUp(false)} />
               <p className="text-center mt-4">
                 Already have an account?
                 <button
@@ -29,7 +30,7 @@ function Login() {
               <h2 className="text-xl font-semibold mb-4 text-center">
                 Sign In
               </h2>
-
+              <SignIn onSignInSuccess={onLoginSuccess} />
               <p className="text-center mt-4">
                 Don't have an account?
                 <button

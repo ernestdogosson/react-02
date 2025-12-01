@@ -1,16 +1,9 @@
 import { useState } from "react";
 
-function SignUp() {
+function SignIn({ onSignInSuccess }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
-  const addStorage = () => {
-    localStorage.setItem("user", JSON.stringify({ username, password }));
-    setUsername("");
-    setPassword("");
-    setError("Account created! Please sign in to continue.");
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -18,7 +11,14 @@ function SignUp() {
       setError("Please fill in both fields");
       return;
     }
-    addStorage();
+    
+    const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+    if (username === storedUser.username && password === storedUser.password) {
+      setError("");
+      onSignInSuccess();
+    } else {
+      setError("Invalid username or password");
+    }
   };
 
   return (
@@ -28,10 +28,8 @@ function SignUp() {
         type="text"
         placeholder="Username"
         className={`block mb-8 outline-1 p-3 w-full rounded focus:outline-2 ${
-          error && !username
-            ? "outline-red-500 focus:outline-red-500"
-            : "outline-gray-300 focus:outline-blue-500"
-        }`}
+            error && !username ? 'outline-red-500 focus:outline-red-500' : 'outline-gray-300 focus:outline-blue-500'
+          }`}
         value={username}
         onChange={(e) => {
           setUsername(e.target.value);
@@ -42,25 +40,19 @@ function SignUp() {
         type="password"
         placeholder="Password"
         className={`block mb-8 outline-1 p-3 w-full rounded focus:outline-2 ${
-          error && !password
-            ? "outline-red-500 focus:outline-red-500"
-            : "outline-gray-300 focus:outline-blue-500"
-        }`}
+            error && !password ? 'outline-red-500 focus:outline-red-500' : 'outline-gray-300 focus:outline-blue-500'
+          }`}
         value={password}
         onChange={(e) => {
           setPassword(e.target.value);
           setError("");
         }}
       />
-
-      <button
-        type="submit"
-        className="bg-blue-500 text-white py-4 w-full rounded hover:bg-blue-600 transition"
-      >
-        Register
+      <button type="submit" className="w-full bg-blue-500 text-white p-3 rounded hover:bg-blue-600 transition-colors">
+        Sign In
       </button>
     </form>
   );
 }
 
-export default SignUp;
+export default SignIn;

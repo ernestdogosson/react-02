@@ -1,7 +1,10 @@
+import { useState } from "react";
 import Api from "./components/Api";
 import Login from "./components/Login";
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   return (
     <div className="min-h-screen bg-gray-100 relative">
       <div className="py-8 bg-white text-center">
@@ -10,8 +13,8 @@ function App() {
         </h1>
         <span className="text-blue-500 ">Test your knowledge</span>
       </div>
-      <Api />
-      <Login />
+      {!isAuthenticated && <Login onLoginSuccess={() => setIsAuthenticated(true)} />}
+      {isAuthenticated && <Api />}
     </div>
   );
 }
