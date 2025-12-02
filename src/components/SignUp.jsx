@@ -1,15 +1,18 @@
 import { useState } from "react";
 
-function SignUp() {
+function SignUp({ onSignUpSuccess }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const addStorage = () => {
     localStorage.setItem("user", JSON.stringify({ username, password }));
-    setUsername("");
-    setPassword("");
-    setError("Account created! Please sign in to continue.");
+    setIsSuccess(true);
+    setError("");
+    setTimeout(() => {
+      onSignUpSuccess();
+    }, 1500);
   };
 
   const handleSubmit = (e) => {
@@ -23,7 +26,13 @@ function SignUp() {
 
   return (
     <form onSubmit={handleSubmit}>
-      {error && <div className="text-red-500 text-sm my-2">{error}</div>}
+      {isSuccess ? (
+        <div className="text-green-500 text-sm my-2 text-center">
+          ✓ Account created successfully! Redirecting to sign in...
+        </div>
+      ) : (
+        error && <div className="text-red-500 text-sm my-2">{error}</div>
+      )}
       <input
         type="text"
         placeholder="Username"
@@ -37,6 +46,7 @@ function SignUp() {
           setUsername(e.target.value);
           setError("");
         }}
+        disabled={isSuccess}
       />
       <input
         type="password"
@@ -51,13 +61,15 @@ function SignUp() {
           setPassword(e.target.value);
           setError("");
         }}
+        disabled={isSuccess}
       />
 
       <button
         type="submit"
-        className="bg-blue-500 text-white py-4 w-full rounded hover:bg-blue-600 transition"
+        className="bg-blue-500 text-white py-4 w-full rounded hover:bg-blue-600 transition disabled:bg-gray-400"
+        disabled={isSuccess}
       >
-        Register
+        {isSuccess ? "Creating Account..." : "Register"}
       </button>
     </form>
   );
